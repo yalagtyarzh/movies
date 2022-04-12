@@ -42,7 +42,7 @@ func main() {
 
 	flag.IntVar(&cfg.port, "port", 8080, "Server port to listen on")
 	flag.StringVar(&cfg.env, "env", "development", "Application environment (development|production)")
-	flag.StringVar(&cfg.db.dsn, "dsn", "postgres://Agrael:PASSWORD@localhost/movies?sslmode=disable", "Postgres connection string")
+	flag.StringVar(&cfg.db.dsn, "dsn", "postgres://USER:PASSWORD@localhost/movies?sslmode=disable", "Postgres connection string")
 
 	flag.Parse()
 
