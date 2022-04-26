@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -210,6 +211,7 @@ func (m *DBModel) InsertMovie(movie Movie) error {
 	)
 
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -236,6 +238,21 @@ func (m *DBModel) UpdateMovie(movie Movie) error {
 		movie.ID,
 	)
 
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func (m *DBModel) DeleteMovie(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `delete from movies where id = $1`
+
+	_, err := m.DB.ExecContext(ctx, stmt, id)
 	if err != nil {
 		return err
 	}

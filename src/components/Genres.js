@@ -11,7 +11,6 @@ export default class Genres extends Component {
 
 	componentDidMount() {
 		fetch("http://localhost:8080/v1/genres")
-			// .then((response) => response.json())
 			.then((response) => {
 				console.log("Status code is", response.status);
 				if(response.status !== "200") {
