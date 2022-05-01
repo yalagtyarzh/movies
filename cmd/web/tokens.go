@@ -22,7 +22,7 @@ type Credentials struct {
 	Password string `json:"password"`
 }
 
-func (app *application) Signin(w http.ResponseWriter, r *http.Request) {
+func (app *application) signin(w http.ResponseWriter, r *http.Request) {
 	var creds Credentials
 
 	err := json.NewDecoder(r.Body).Decode(&creds)
