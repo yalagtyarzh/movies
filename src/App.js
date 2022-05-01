@@ -19,12 +19,22 @@ export default class App extends Component {
 		this.handleJWTChange(this.handleJWTChange.bind(this));
 	}
 
+	componentDidMount () {
+		let t = window.localStorage.getItem("jwt");
+		if (t) {
+			if (this.state.jwt === "") {
+				this.setState({jwt: JSON.parse(t)});
+			}
+		}
+	}
+
 	handleJWTChange = (jwt) => {
 		this.setState({jwt: jwt});
 	}
 
 	logout = () => {
 		this.setState({jwt: ""});
+		window.localStorage.removeItem("jwt");
 	}
 
 	render () {
@@ -72,10 +82,12 @@ export default class App extends Component {
 													<li className="list-group-item">
 														<Link to="/admin">Manage Catalogue</Link>
 													</li>
-												</Fragment>)
-										}
+												</Fragment>
+										)}
 									</ul>
-
+									<pre>
+										{JSON.stringify(this.state, null, 3)}
+									</pre>
 								</nav>
 							</div>
 
@@ -97,10 +109,14 @@ export default class App extends Component {
 										<Genres/>
 									</Route>
 
-									<Route path="/admin/movie/:id" component={EditMovie}/>
+									<Route path="/admin/movie/:id" component={(props) => (
+											<EditMovie {...props} jwt={this.state.jwt} />
+									)} />
 
-									<Route path="/admin">
-										<Admin/>
+									<Route path="/admin" component={(props) => (
+											<Admin {...props} jwt={this.state.jwt} />
+									)}>
+
 									</Route>
 
 									<Route path="/">
