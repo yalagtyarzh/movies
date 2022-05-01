@@ -45,7 +45,7 @@ func (app *application) Signin(w http.ResponseWriter, r *http.Request) {
 	claims.NotBefore = jwt.NewNumericTime(time.Now())
 	claims.Expires = jwt.NewNumericTime(time.Now().Add(24 * time.Hour))
 	claims.Issuer = "mydomain.com"
-	claims.Audiences = []string{"mydomain.com"}
+	claims.Audiences = []string{"AlisterAgraelAzimuth.com"}
 
 	jwtBytes, err := claims.HMACSign(jwt.HS256, []byte(app.config.jwt.secret))
 	if err != nil {
@@ -53,5 +53,5 @@ func (app *application) Signin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.writeJSON(w, http.StatusOK, jwtBytes, "response")
+	app.writeJSON(w, http.StatusOK, string(jwtBytes), "response")
 }
