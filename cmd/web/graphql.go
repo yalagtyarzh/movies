@@ -57,7 +57,7 @@ var fields = graphql.Fields{
 			search, ok := p.Args["titleContains"].(string)
 			if ok {
 				for _, currentMovie := range movies {
-					if strings.Contains(currentMovie.Title, search) {
+					if strings.Contains(strings.ToLower(currentMovie.Title), strings.ToLower(search)) {
 						log.Println("Found one")
 						theList = append(theList, currentMovie)
 					}
@@ -102,6 +102,9 @@ var movieType = graphql.NewObject(
 			},
 			"updated_at": &graphql.Field{
 				Type: graphql.DateTime,
+			},
+			"poster": &graphql.Field{
+				Type: graphql.String,
 			},
 		},
 	})

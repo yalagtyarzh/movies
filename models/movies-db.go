@@ -19,7 +19,7 @@ func (m *DBModel) Get(id int) (*Movie, error) {
 
 	query := `
 		select id, title, description, year, release_date, rating, runtime, mpaa_rating,
-			created_at, updated_at
+			created_at, updated_at, coalesce(poster, '')
 			from movies
 			where id = $1
 	`
@@ -38,6 +38,7 @@ func (m *DBModel) Get(id int) (*Movie, error) {
 		&movie.MPAARating,
 		&movie.CreatedAt,
 		&movie.UpdatedAt,
+		&movie.Poster,
 	)
 
 	if err != nil {
@@ -91,7 +92,7 @@ func (m *DBModel) All(genre ...int) ([]*Movie, error) {
 
 	query := fmt.Sprintf(`
 		select id, title, description, year, release_date, rating, runtime, mpaa_rating,
-			created_at, updated_at
+			created_at, updated_at, coalesce(poster, '')
 			from movies
 			%s
 			order by title`,
@@ -118,6 +119,7 @@ func (m *DBModel) All(genre ...int) ([]*Movie, error) {
 			&movie.MPAARating,
 			&movie.CreatedAt,
 			&movie.UpdatedAt,
+			&movie.Poster,
 		)
 		if err != nil {
 			return nil, err
@@ -196,7 +198,7 @@ func (m *DBModel) InsertMovie(movie Movie) error {
 	defer cancel()
 
 	stmt := `insert into movies (title, description, year, release_date, runtime, rating, mpaa_rating,
-				created_at, updated_at) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+				created_at, updated_at, poster) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 
 	_, err := m.DB.ExecContext(ctx, stmt,
 		movie.Title,
@@ -208,6 +210,7 @@ func (m *DBModel) InsertMovie(movie Movie) error {
 		movie.MPAARating,
 		movie.CreatedAt,
 		movie.UpdatedAt,
+		movie.Poster,
 	)
 
 	if err != nil {
@@ -223,8 +226,8 @@ func (m *DBModel) UpdateMovie(movie Movie) error {
 	defer cancel()
 
 	stmt := `update movies set title = $1, description = $2, year = $3, release_date = $4, runtime = $5, rating = $6, 
-				mpaa_rating = $7, updated_at = $8 
-			where id = $9`
+				mpaa_rating = $7, updated_at = $8, poster = $9
+			where id = $10`
 
 	_, err := m.DB.ExecContext(ctx, stmt,
 		movie.Title,
@@ -235,6 +238,7 @@ func (m *DBModel) UpdateMovie(movie Movie) error {
 		movie.Rating,
 		movie.MPAARating,
 		movie.CreatedAt,
+		movie.Poster,
 		movie.ID,
 	)
 

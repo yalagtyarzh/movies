@@ -27,8 +27,11 @@ export default class GraphQL extends Component {
 					searchTerm: value,
 				})
 		)
-
-		this.performSearch();
+		if (value.length > 2) {
+			this.performSearch();
+		} else {
+			this.setState({ movies: []});
+		}
 	}
 
 	performSearch() {
@@ -104,6 +107,9 @@ export default class GraphQL extends Component {
 				})
 				.then((theList) => {
 					console.log(theList);
+					for (let i = 0; i < theList.length; i++) {
+						theList[i].title.toLowerCase()
+					}
 					this.setState({
 						movies: theList,
 					})
@@ -121,7 +127,7 @@ export default class GraphQL extends Component {
 								 handleChange={this.handleChange}/>
 					<div className="list-group">
 						{movies.map((m) => (
-								<Link key={m.id} className="list-group-item list-group-item-action" href="#!">
+								<Link key={m.id} className="list-group-item list-group-item-action" to={`/moviesgraphql/${m.id}`}>
 									<strong>{m.title}</strong><br/>
 									<small className="text-muted">
 										({m.year}) - {m.runtime} minutes
